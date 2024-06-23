@@ -1,5 +1,8 @@
 package br.com.fiap.mslogin.controller;
 
+import br.com.fiap.mslogin.controller.dto.LoginDTO;
+import br.com.fiap.mslogin.controller.dto.TokenDTO;
+import br.com.fiap.mslogin.controller.dto.UsuarioDTO;
 import br.com.fiap.mslogin.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,5 +27,13 @@ public class UsuarioController {
         service.incluir(dto);
 
         return new ResponseEntity<>("Usuário criado com sucesso!", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/logar")
+    public ResponseEntity<TokenDTO> incluir(@Valid @RequestBody LoginDTO dto){
+
+        var token = service.logar(dto);
+
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 }

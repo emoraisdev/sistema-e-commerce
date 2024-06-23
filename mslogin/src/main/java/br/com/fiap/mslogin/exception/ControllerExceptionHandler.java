@@ -40,6 +40,13 @@ public class ControllerExceptionHandler {
                 .body(getStandardError(HttpStatus.BAD_REQUEST.value(), "Erro de Validação", erro.getMessage(), request.getRequestURI()));
     }
 
+    @ExceptionHandler(LoginInvalido.class)
+    public ResponseEntity<StandardError> loginInvalidoException(final LoginInvalido erro, final HttpServletRequest request){
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN.value())
+                .body(getStandardError(HttpStatus.FORBIDDEN.value(), "Erro de Autenticação", erro.getMessage(), request.getRequestURI()));
+    }
+
     private StandardError getStandardError(Integer status, String tipoErro, String mensagem, String uri){
 
         var erro = new StandardError();

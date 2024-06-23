@@ -1,4 +1,4 @@
-package br.com.fiap.mslogin.controller;
+package br.com.fiap.mslogin.controller.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
