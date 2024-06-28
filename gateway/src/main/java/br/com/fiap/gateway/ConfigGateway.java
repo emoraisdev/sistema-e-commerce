@@ -1,8 +1,8 @@
 package br.com.fiap.gateway;
 
+import br.com.fiap.gateway.routes.MsLoginRoutes;
 import br.com.fiap.gateway.security.AuthenticationFilter;
-import br.com.fiap.gateway.security.CustomFilterConfig;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.Buildable;
@@ -11,29 +11,25 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Map;
+import java.util.function.Function;
+
 @Configuration
+@AllArgsConstructor
 public class ConfigGateway {
 
-    @Value("${api.mslogin.server}")
-    private String mslogin;
-
     private final AuthenticationFilter authenticationFilter;
-
-    public ConfigGateway(AuthenticationFilter authenticationFilter) {
-        this.authenticationFilter = authenticationFilter;
-    }
+    private final MsLoginRoutes loginRoutes;
 
     @Bean
     public RouteLocator custom(RouteLocatorBuilder builder){
-        return builder.routes()
-                .route("login", this::configureLoginRoute)
-                .build();
 
+        var routerBuilder = builder.routes();
+
+        // Cada serviço terá a própria implementação da configuração de rotas.
+        loginRoutes.createRoutes(routerBuilder, authenticationFilter);
+
+        return routerBuilder.build();
     }
 
-    private Buildable<Route> configureLoginRoute(PredicateSpec r) {
-        return r.path("/usuarios/**")
-                .filters(f -> f.stripPrefix(1).filter(authenticationFilter.apply(new CustomFilterConfig("ADMIN"))))
-                .uri(mslogin);
-    }
 }
