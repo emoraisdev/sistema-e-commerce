@@ -16,11 +16,10 @@ public class MsLoginRoutes {
     @Value("${api.mslogin.server}")
     private String mslogin;
 
-    public RouteLocatorBuilder.Builder createRoutes(RouteLocatorBuilder.Builder routerBuilder, AuthenticationFilter authenticationFilter){
+    public void createRoutes(RouteLocatorBuilder.Builder routerBuilder, AuthenticationFilter authenticationFilter){
 
-        return routerBuilder.route("loginConsultaUsuarios", r -> configureLoginConsultaUsuariosRoute(r, authenticationFilter)).
+        routerBuilder.route("loginConsultaUsuarios", r -> configureLoginConsultaUsuariosRoute(r, authenticationFilter)).
                 route("loginCadastro", this::configureLoginCadastroRoute);
-
     }
 
     private Buildable<Route> configureLoginConsultaUsuariosRoute(PredicateSpec r, AuthenticationFilter authenticationFilter) {
