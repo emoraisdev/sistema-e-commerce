@@ -4,12 +4,15 @@ import br.com.fiap.mslogin.constants.Constants;
 import br.com.fiap.mslogin.controller.dto.LoginDTO;
 import br.com.fiap.mslogin.controller.dto.TokenDTO;
 import br.com.fiap.mslogin.controller.dto.UsuarioDTO;
+import br.com.fiap.mslogin.controller.dto.UsuarioResponseDTO;
 import br.com.fiap.mslogin.exception.BusinessException;
 import br.com.fiap.mslogin.exception.LoginInvalido;
 import br.com.fiap.mslogin.model.Usuario;
 import br.com.fiap.mslogin.repository.UsuarioRepository;
 import br.com.fiap.mslogin.security.TokenService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -63,11 +66,17 @@ public class UsuarioServiceImpl implements UsuarioService{
             throw new LoginInvalido();
         }
 
-        if (passwordEncoder.matches(login.senha(), usuario.getPassword())){
+        if (passwordEncoder.matches(login.senha(), usuario.getSenha())){
             return new TokenDTO(tokenService.generateToken(usuario));
         } else {
             throw new LoginInvalido();
         }
+    }
+
+    @Override
+    public Page<UsuarioResponseDTO> listar(PageRequest pageRequest) {
+        var usuarios =  repo.findAll(pageRequest);
+        return usuarios.map(this::toUsuarioResponseDTO);
     }
 
     private Usuario toEntity(UsuarioDTO dto){
@@ -76,5 +85,13 @@ public class UsuarioServiceImpl implements UsuarioService{
                 .email(dto.email())
                 .senha(dto.senha())
                 .build();
+    }
+
+    private UsuarioResponseDTO toUsuarioResponseDTO(Usuario entity){
+        return new UsuarioResponseDTO(
+                entity.getId(),
+                entity.getEmail(),
+                entity.getNome()
+        );
     }
 }

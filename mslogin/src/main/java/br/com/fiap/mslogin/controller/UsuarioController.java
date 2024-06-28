@@ -3,18 +3,19 @@ package br.com.fiap.mslogin.controller;
 import br.com.fiap.mslogin.controller.dto.LoginDTO;
 import br.com.fiap.mslogin.controller.dto.TokenDTO;
 import br.com.fiap.mslogin.controller.dto.UsuarioDTO;
+import br.com.fiap.mslogin.controller.dto.UsuarioResponseDTO;
 import br.com.fiap.mslogin.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/usuarios")
 @AllArgsConstructor
 public class UsuarioController {
 
@@ -35,5 +36,15 @@ public class UsuarioController {
         var token = service.logar(dto);
 
         return new ResponseEntity<>(token, HttpStatus.OK);
+    }
+
+    @GetMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Page<UsuarioResponseDTO>> listar(@RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "10") int size) {
+
+        var usuarios = service.listar(PageRequest.of(page, size));
+        return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
 }
