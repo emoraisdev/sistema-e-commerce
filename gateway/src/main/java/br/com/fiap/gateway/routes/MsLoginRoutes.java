@@ -16,7 +16,7 @@ public class MsLoginRoutes {
     @Value("${api.mslogin.server}")
     private String mslogin;
 
-    public void createRoutes(RouteLocatorBuilder.Builder routerBuilder, AuthenticationFilter authenticationFilter){
+    public void createRoutes(RouteLocatorBuilder.Builder routerBuilder, AuthenticationFilter authenticationFilter) {
 
         routerBuilder.route("loginConsultaUsuarios", r -> configureLoginConsultaUsuariosRoute(r, authenticationFilter)).
                 route("loginCadastro", this::configureLoginCadastroRoute);
@@ -25,7 +25,8 @@ public class MsLoginRoutes {
     private Buildable<Route> configureLoginConsultaUsuariosRoute(PredicateSpec r, AuthenticationFilter authenticationFilter) {
         return r.path("/usuarios/api/usuarios")
                 .and().method(HttpMethod.GET)
-                .filters(f -> f.stripPrefix(1).filter(authenticationFilter.apply(new CustomFilterConfig("ADMIN"))))
+                .filters(f -> f.stripPrefix(1)
+                        .filter(authenticationFilter.apply(new CustomFilterConfig(Roles.ROLE_ADMIN))))
                 .uri(mslogin);
     }
 

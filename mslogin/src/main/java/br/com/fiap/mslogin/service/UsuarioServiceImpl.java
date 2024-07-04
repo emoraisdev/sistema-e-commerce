@@ -7,6 +7,7 @@ import br.com.fiap.mslogin.controller.dto.UsuarioDTO;
 import br.com.fiap.mslogin.controller.dto.UsuarioResponseDTO;
 import br.com.fiap.mslogin.exception.BusinessException;
 import br.com.fiap.mslogin.exception.LoginInvalido;
+import br.com.fiap.mslogin.model.Role;
 import br.com.fiap.mslogin.model.Usuario;
 import br.com.fiap.mslogin.repository.UsuarioRepository;
 import br.com.fiap.mslogin.security.TokenService;
@@ -14,6 +15,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -45,7 +49,6 @@ public class UsuarioServiceImpl implements UsuarioService{
         }
 
         Usuario usuario = toEntity(dto);
-        // Usuário cadastrado com a role padrão USER;
         usuario.addRole(roleUser);
         usuario.setSenha(passwordEncoder.encodePassword(dto.senha()));
 
@@ -53,8 +56,8 @@ public class UsuarioServiceImpl implements UsuarioService{
     }
 
     @Override
-    public Usuario findByEmail(String email) {
-        return repo.getUsuarioByEmail(email);
+    public UsuarioResponseDTO findByEmail(String email) {
+        return toUsuarioResponseDTO(repo.getUsuarioByEmail(email));
     }
 
     @Override
@@ -91,7 +94,8 @@ public class UsuarioServiceImpl implements UsuarioService{
         return new UsuarioResponseDTO(
                 entity.getId(),
                 entity.getEmail(),
-                entity.getNome()
+                entity.getNome(),
+                entity.getRoles().stream().map(Role::getName).toList()
         );
     }
 }

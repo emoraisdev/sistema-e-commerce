@@ -1,8 +1,8 @@
-package br.com.fiap.mslogin.controller.dto;
+package br.com.fiap.gateway.integration.dto;
 
 import java.util.List;
 
-public record UsuarioResponseDTO(
+public record UsuarioDTO(
         Long id,
         String email,
         String nome,

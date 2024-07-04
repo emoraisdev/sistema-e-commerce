@@ -12,7 +12,7 @@ public interface UsuarioService {
 
     void incluir(UsuarioDTO dto);
 
-    Usuario findByEmail(String email);
+    UsuarioResponseDTO findByEmail(String email);
 
     TokenDTO logar(LoginDTO login);
 

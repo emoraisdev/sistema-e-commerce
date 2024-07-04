@@ -1,5 +1,6 @@
 package br.com.fiap.gateway.security;
 
+import br.com.fiap.gateway.integration.LoginServiceApi;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
@@ -14,9 +15,12 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<CustomFil
 
     private final TokenService tokenService;
 
-    public AuthenticationFilter(TokenService tokenService){
+    private final LoginServiceApi loginServiceApi;
+
+    public AuthenticationFilter(TokenService tokenService, LoginServiceApi loginServiceApi) {
         super(CustomFilterConfig.class);
         this.tokenService = tokenService;
+        this.loginServiceApi = loginServiceApi;
     }
 
     @Override
@@ -25,16 +29,28 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<CustomFil
             var request = exchange.getRequest();
 
             var token = this.recoverToken(request);
-            if(token != null){
+            if (token != null) {
 
-                if (tokenService.validateToken(token) == null) {
+                String email = tokenService.validateToken(token);
+                if (email == null) {
                     return onError(exchange, "Token Inválido", HttpStatus.UNAUTHORIZED);
+                }
+
+                var usuario = loginServiceApi.consultarPorEmail(email);
+
+                if (usuario != null
+                    && usuario.roles() != null
+                    && usuario.roles().stream().anyMatch(r -> r.equalsIgnoreCase(config.getRole()))) {
+
+                    return chain.filter(exchange);
+                } else {
+                    return onError(exchange, "Usuário não possui permissão para acessar o endereço solicitado.",
+                            HttpStatus.UNAUTHORIZED);
                 }
 
             } else {
                 return onError(exchange, "Token Não informado", HttpStatus.BAD_REQUEST);
             }
-            return chain.filter(exchange);
         };
     }
 
@@ -47,9 +63,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<CustomFil
                 .bufferFactory().wrap(errorBody.getBytes())));
     }
 
-    private String recoverToken(ServerHttpRequest request){
+    private String recoverToken(ServerHttpRequest request) {
         var authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        if(authHeader == null) return null;
+        if (authHeader == null) return null;
         return authHeader.replace("Bearer ", "");
     }
 }

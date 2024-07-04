@@ -47,4 +47,13 @@ public class UsuarioController {
         var usuarios = service.listar(PageRequest.of(page, size));
         return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
+
+    @GetMapping(path = "/by-email/{email}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<UsuarioResponseDTO> getByEmail(@PathVariable String email) {
+
+        var usuario = service.findByEmail(email);
+        return new ResponseEntity<>(usuario, HttpStatus.OK);
+    }
 }
