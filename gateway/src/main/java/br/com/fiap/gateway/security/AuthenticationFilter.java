@@ -26,9 +26,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<CustomFil
     @Override
     public GatewayFilter apply(CustomFilterConfig config) {
         return (exchange, chain) -> {
-            var request = exchange.getRequest();
 
-            var token = this.recoverToken(request);
+            var token = this.recoverToken(exchange.getRequest());
             if (token != null) {
 
                 String email = tokenService.validateToken(token);
@@ -42,7 +41,13 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<CustomFil
                     && usuario.roles() != null
                     && usuario.roles().stream().anyMatch(r -> r.equalsIgnoreCase(config.getRole()))) {
 
-                    return chain.filter(exchange);
+                    // Adiciona o Id do usuário para passar na requisição para os microserviços.
+                    var request = exchange.getRequest()
+                            .mutate()
+                            .header("usuarioId", usuario.id().toString())
+                            .build();
+
+                    return chain.filter(exchange.mutate().request(request).build());
                 } else {
                     return onError(exchange, "Usuário não possui permissão para acessar o endereço solicitado.",
                             HttpStatus.UNAUTHORIZED);
