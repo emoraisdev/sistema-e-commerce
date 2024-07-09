@@ -19,50 +19,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"nome\": \"teste2\",\r\n    \"email\": \"email3@12312312311.com\",\r\n    \"senha\": \"123123\",\r\n    \"confirmacaoSenha\": \"123123\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8080/usuarios/api/usuarios",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"usuarios",
-										"api",
-										"usuarios"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Listar",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsMkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjAxNDA3OTJ9.at1PXHyROdJLSuDLxbKX8K8YeYaA9kI6kBiIQk4hPwY",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
+									"raw": "{\r\n    \"nome\": \"teste6\",\r\n    \"email\": \"email6@12312312311.com\",\r\n    \"senha\": \"123123\",\r\n    \"confirmacaoSenha\": \"123123\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -115,6 +72,90 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Listar",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsNkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA0OTUyNjd9.Is30ZmCGBfk3RhqGt0K-cRgsjz2hlCpBOvRWD83HeK0",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/usuarios/api/usuarios",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"usuarios",
+										"api",
+										"usuarios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Atribuir Role",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsMkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA0OTQzOTB9.j7c4rSlofujxy4v1P28Q_zxI-K_6XLJwy5HyY3PEmTM",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"email5@12312312311.com\",\r\n    \"role\": \"ADMIN\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/usuarios/api/usuarios/atribuir-role",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"usuarios",
+										"api",
+										"usuarios",
+										"atribuir-role"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -129,7 +170,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsQDEyMzEyMzEyMzExLmNvbSIsImV4cCI6MTcxOTExODU1NX0.ci7rPdARIF7uyiqSEuYIQz2sng9p__qpBYcT4pK9kN",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsMkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA0OTQzOTB9.j7c4rSlofujxy4v1P28Q_zxI-K_6XLJwy5HyY3PEmTM",
 											"type": "string"
 										}
 									]
@@ -138,7 +179,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"USER\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Fiscal\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -146,13 +187,58 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8081/roles",
+									"raw": "http://localhost:8080/usuarios/api/roles",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
-									"port": "8081",
+									"port": "8080",
 									"path": [
+										"usuarios",
+										"api",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsMkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA0OTUzODB9.A8rYvbnpwdcuS65Xmfd4VIZZQR1JJJSbYkdIqB4QIVk",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Fiscal\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/usuarios/api/roles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"usuarios",
+										"api",
 										"roles"
 									]
 								}
