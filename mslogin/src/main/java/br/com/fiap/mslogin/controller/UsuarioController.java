@@ -1,9 +1,6 @@
 package br.com.fiap.mslogin.controller;
 
-import br.com.fiap.mslogin.controller.dto.LoginDTO;
-import br.com.fiap.mslogin.controller.dto.TokenDTO;
-import br.com.fiap.mslogin.controller.dto.UsuarioDTO;
-import br.com.fiap.mslogin.controller.dto.UsuarioResponseDTO;
+import br.com.fiap.mslogin.controller.dto.*;
 import br.com.fiap.mslogin.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -55,5 +52,14 @@ public class UsuarioController {
 
         var usuario = service.findByEmail(email);
         return new ResponseEntity<>(usuario, HttpStatus.OK);
+    }
+
+    @PostMapping("/atribuir-role")
+    public ResponseEntity<UsuarioResponseDTO> atribuirRole(@Valid @RequestBody UsuarioRoleDTO usuarioRoleDTO){
+
+
+        var user = service.atribuirRole(usuarioRoleDTO);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

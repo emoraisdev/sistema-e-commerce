@@ -1,11 +1,9 @@
 package br.com.fiap.mslogin.service;
 
 import br.com.fiap.mslogin.constants.Constants;
-import br.com.fiap.mslogin.controller.dto.LoginDTO;
-import br.com.fiap.mslogin.controller.dto.TokenDTO;
-import br.com.fiap.mslogin.controller.dto.UsuarioDTO;
-import br.com.fiap.mslogin.controller.dto.UsuarioResponseDTO;
+import br.com.fiap.mslogin.controller.dto.*;
 import br.com.fiap.mslogin.exception.BusinessException;
+import br.com.fiap.mslogin.exception.EntityNotFoundException;
 import br.com.fiap.mslogin.exception.LoginInvalido;
 import br.com.fiap.mslogin.model.Role;
 import br.com.fiap.mslogin.model.Usuario;
@@ -15,9 +13,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -44,7 +39,7 @@ public class UsuarioServiceImpl implements UsuarioService{
             throw new BusinessException("As senhas devem ser iguais.");
         }
 
-        if (repo.getUsuarioByEmail(dto.email()) != null) {
+        if (repo.getUsuarioByEmail(dto.email()).isPresent()) {
             throw new BusinessException("E-mail já utilizado.");
         }
 
@@ -57,17 +52,17 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Override
     public UsuarioResponseDTO findByEmail(String email) {
-        return toUsuarioResponseDTO(repo.getUsuarioByEmail(email));
+
+        var usuario = repo.getUsuarioByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(Usuario.class.getSimpleName()));
+
+        return toUsuarioResponseDTO(usuario);
     }
 
     @Override
     public TokenDTO logar(LoginDTO login) {
 
-        var usuario = repo.getUsuarioByEmail(login.email());
-
-        if (usuario == null) {
-            throw new LoginInvalido();
-        }
+        var usuario = repo.getUsuarioByEmail(login.email()).orElseThrow(LoginInvalido::new);
 
         if (passwordEncoder.matches(login.senha(), usuario.getSenha())){
             return new TokenDTO(tokenService.generateToken(usuario));
@@ -80,6 +75,23 @@ public class UsuarioServiceImpl implements UsuarioService{
     public Page<UsuarioResponseDTO> listar(PageRequest pageRequest) {
         var usuarios =  repo.findAll(pageRequest);
         return usuarios.map(this::toUsuarioResponseDTO);
+    }
+
+    @Override
+    public UsuarioResponseDTO atribuirRole(UsuarioRoleDTO usuarioResponseDTO) {
+
+        var usuario = repo.getUsuarioByEmail(usuarioResponseDTO.email())
+                .orElseThrow(() -> new BusinessException("Usuário Não encontrado!"));
+
+        var role = roleService.findByName(usuarioResponseDTO.role());
+
+        if (usuario.getRoles().stream().anyMatch( r -> r.getId().equals(role.getId()))) {
+           throw new BusinessException("Usuário já possui a Role especificada.");
+        }
+
+        usuario.addRole(role);
+
+        return toUsuarioResponseDTO(repo.save(usuario));
     }
 
     private Usuario toEntity(UsuarioDTO dto){

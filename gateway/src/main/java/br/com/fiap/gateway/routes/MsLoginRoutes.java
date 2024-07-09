@@ -18,12 +18,13 @@ public class MsLoginRoutes {
 
     public void createRoutes(RouteLocatorBuilder.Builder routerBuilder, AuthenticationFilter authenticationFilter) {
 
-        routerBuilder.route("loginConsultaUsuarios", r -> configureLoginConsultaUsuariosRoute(r, authenticationFilter)).
-                route("loginCadastro", this::configureLoginCadastroRoute);
+        routerBuilder.route("loginConsultaUsuarios", r -> configureLoginConsultaUsuariosRoute(r, authenticationFilter))
+                        .route("loginCadastro", this::configureLoginCadastroRoute)
+                .route("atribuirRole", r -> configureAtribuirRoleRoute(r, authenticationFilter));
     }
 
     private Buildable<Route> configureLoginConsultaUsuariosRoute(PredicateSpec r, AuthenticationFilter authenticationFilter) {
-        return r.path("/usuarios/api/usuarios")
+        return r.path("/usuarios/api/usuarios","/usuarios/api/roles")
                 .and().method(HttpMethod.GET)
                 .filters(f -> f.stripPrefix(1)
                         .filter(authenticationFilter.apply(new CustomFilterConfig(Roles.ROLE_ADMIN))))
@@ -34,6 +35,15 @@ public class MsLoginRoutes {
         return r.path("/usuarios/api/usuarios", "/usuarios/api/usuarios/logar")
                 .and().method(HttpMethod.POST)
                 .filters(f -> f.stripPrefix(1))
+                .uri(mslogin);
+    }
+
+    private Buildable<Route> configureAtribuirRoleRoute(PredicateSpec r, AuthenticationFilter authenticationFilter) {
+        return r.path("/usuarios/api/usuarios/atribuir-role"
+                ,"/usuarios/api/roles")
+                .and().method(HttpMethod.POST)
+                .filters(f -> f.stripPrefix(1)
+                        .filter(authenticationFilter.apply(new CustomFilterConfig(Roles.ROLE_ADMIN))))
                 .uri(mslogin);
     }
 }
