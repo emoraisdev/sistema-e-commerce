@@ -49,7 +49,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"email2@12312312311.com\",\r\n    \"senha\": \"123123\"\r\n}",
+									"raw": "{\r\n    \"email\": \"email6@12312312311.com\",\r\n    \"senha\": \"123123\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -84,7 +84,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsNkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA0OTUyNjd9.Is30ZmCGBfk3RhqGt0K-cRgsjz2hlCpBOvRWD83HeK0",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsNkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA1NzIzNDh9.Nd8ueEXZBisphaL1XLCtjgzJCUcg_sQsy2wpvtOlOmI",
 											"type": "string"
 										}
 									]
@@ -124,7 +124,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsMkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA0OTQzOTB9.j7c4rSlofujxy4v1P28Q_zxI-K_6XLJwy5HyY3PEmTM",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsNkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA1NzIzNDh9.Nd8ueEXZBisphaL1XLCtjgzJCUcg_sQsy2wpvtOlOmI",
 											"type": "string"
 										}
 									]
@@ -240,6 +240,82 @@
 										"usuarios",
 										"api",
 										"roles"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "MsPrecos",
+			"item": [
+				{
+					"name": "Precos",
+					"item": [
+						{
+							"name": "Cadastrar",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"preco\": \"100.32\",\r\n    \"itemId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8083/api/precos",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8083",
+									"path": [
+										"api",
+										"precos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar por Item Id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8083/api/precos/by-item-id/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8083",
+									"path": [
+										"api",
+										"precos",
+										"by-item-id",
+										"1"
 									]
 								}
 							},
