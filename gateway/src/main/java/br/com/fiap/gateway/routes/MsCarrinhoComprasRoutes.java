@@ -13,37 +13,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class MsCarrinhoComprasRoutes {
 
-    @Value("${api.mslogin.server}")
-    private String mslogin;
+    @Value("${api.mscarrinhocompras.server}")
+    private String msCarrinho;
 
     public void createRoutes(RouteLocatorBuilder.Builder routerBuilder, AuthenticationFilter authenticationFilter) {
-
-        routerBuilder.route("loginConsultaUsuarios", r -> configureLoginConsultaUsuariosRoute(r, authenticationFilter))
-                        .route("loginCadastro", this::configureLoginCadastroRoute)
-                .route("atribuirRole", r -> configureAtribuirRoleRoute(r, authenticationFilter));
+        routerBuilder.route("carrinhocompras", r -> configureCarrinhoComprasRoute(r, authenticationFilter));
     }
 
-    private Buildable<Route> configureLoginConsultaUsuariosRoute(PredicateSpec r, AuthenticationFilter authenticationFilter) {
-        return r.path("/usuarios/api/usuarios","/usuarios/api/roles")
-                .and().method(HttpMethod.GET)
+    private Buildable<Route> configureCarrinhoComprasRoute(PredicateSpec r, AuthenticationFilter authenticationFilter) {
+        return r.path("/api/carrinho/**")
                 .filters(f -> f.stripPrefix(1)
-                        .filter(authenticationFilter.apply(new CustomFilterConfig(Roles.ROLE_ADMIN))))
-                .uri(mslogin);
+                        .filter(authenticationFilter.apply(new CustomFilterConfig(Roles.ROLE_USER))))
+                .uri(msCarrinho);
     }
 
-    private Buildable<Route> configureLoginCadastroRoute(PredicateSpec r) {
-        return r.path("/usuarios/api/usuarios", "/usuarios/api/usuarios/logar")
-                .and().method(HttpMethod.POST)
-                .filters(f -> f.stripPrefix(1))
-                .uri(mslogin);
-    }
-
-    private Buildable<Route> configureAtribuirRoleRoute(PredicateSpec r, AuthenticationFilter authenticationFilter) {
-        return r.path("/usuarios/api/usuarios/atribuir-role"
-                ,"/usuarios/api/roles")
-                .and().method(HttpMethod.POST)
-                .filters(f -> f.stripPrefix(1)
-                        .filter(authenticationFilter.apply(new CustomFilterConfig(Roles.ROLE_ADMIN))))
-                .uri(mslogin);
-    }
 }
