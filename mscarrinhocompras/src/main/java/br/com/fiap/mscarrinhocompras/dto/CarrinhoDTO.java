@@ -1,10 +1,10 @@
 package br.com.fiap.mscarrinhocompras.dto;
 
-import br.com.fiap.mspedidos.model.FormaPagamento;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,20 +13,15 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PedidoDTO {
-
-    @NotNull(message = "Id do cliente não informado")
-    private Long clienteId;
+@Builder
+public class CarrinhoDTO {
 
     @Valid
-    @NotNull(message = "EnderecoEntrega do cliente não informado")
-    private EnderecoEntregaDTO enderecoEntrega;
+    @NotNull(message = "Id do Usuario não informado")
+    private Long usuarioLogadoId;
 
     @Valid
-    @NotNull(message = "Itens do pedido não informado")
-    @Size(min = 1, message = "Necessário ter ao menos 1 item pedido")
-    private List<ItemPedidoDTO> itensPedido;
-
-    @NotNull(message = "forma de pagamento não informado")
-    private FormaPagamento formaPagamento;
+    @NotNull(message = "Itens do carrinho não informado")
+    @Size(min = 1, message = "Necessário ter ao menos 1 item incluido")
+    private List<ItemDTO> itensLista;
 }

@@ -20,13 +20,6 @@ public class ControllerExceptionHandler {
                 .body(getStandardError(HttpStatus.NOT_FOUND.value(), "Entidade Não Encontrada", erro.getMessage(), request.getRequestURI()));
     }
 
-    @ExceptionHandler(ParameterNotFoundException.class)
-    public ResponseEntity<StandardError> parameterNotFoundException(final EntityNotFoundException erro, final HttpServletRequest request){
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
-                .body(getStandardError(HttpStatus.BAD_REQUEST.value(), "Parâmetro Obrigatório", erro.getMessage(), request.getRequestURI()));
-    }
-
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<StandardError> businessException(BusinessException erro, HttpServletRequest request){
 
