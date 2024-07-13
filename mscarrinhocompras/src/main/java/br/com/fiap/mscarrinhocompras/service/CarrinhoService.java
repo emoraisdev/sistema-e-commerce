@@ -2,7 +2,6 @@ package br.com.fiap.mscarrinhocompras.service;
 
 import br.com.fiap.mscarrinhocompras.dto.CarrinhoDTO;
 import br.com.fiap.mscarrinhocompras.dto.ItemDTO;
-import br.com.fiap.mscarrinhocompras.dto.ItemEstoqueResponseDTO;
 import br.com.fiap.mscarrinhocompras.exception.BusinessException;
 import br.com.fiap.mscarrinhocompras.exception.EntityNotFoundException;
 import br.com.fiap.mscarrinhocompras.model.Carrinho;
@@ -21,7 +20,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
