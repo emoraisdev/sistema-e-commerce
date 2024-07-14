@@ -2,25 +2,20 @@ package br.com.fiap.mscarrinhocompras.service;
 
 import br.com.fiap.mscarrinhocompras.dto.CarrinhoDTO;
 import br.com.fiap.mscarrinhocompras.dto.ItemDTO;
+import br.com.fiap.mscarrinhocompras.dto.ItemEstoqueResponseDTO;
 import br.com.fiap.mscarrinhocompras.exception.BusinessException;
-import br.com.fiap.mscarrinhocompras.exception.EntityNotFoundException;
 import br.com.fiap.mscarrinhocompras.model.Carrinho;
 import br.com.fiap.mscarrinhocompras.model.Item;
 import br.com.fiap.mscarrinhocompras.repository.CarrinhoRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class CarrinhoService {
@@ -28,27 +23,27 @@ public class CarrinhoService {
     private final CarrinhoRepository carrinhoRepository;
 
     private final RestTemplate restTemplate;
-
-    private final ObjectMapper objectMapper;
     @Value("${api.msitem.url}")
-    private String URL_MSITEMS;
+    private String urlMSItems;
 
     @Autowired
-    public CarrinhoService(CarrinhoRepository carrinhoRepository, RestTemplate restTemplate, ObjectMapper objectMapper) {
+    public CarrinhoService(CarrinhoRepository carrinhoRepository, RestTemplate restTemplate) {
         this.carrinhoRepository = carrinhoRepository;
         this.restTemplate = restTemplate;
-        this.objectMapper = objectMapper;
     }
 
-    public CarrinhoDTO adicionar(Long usuarioId, List<ItemDTO> itemIdsParaRemover) {
+    public CarrinhoDTO adicionar(Long usuarioId, List<ItemDTO> itemIds) {
 
         Carrinho carrinhoExistente = getCarrinhoByUser(usuarioId);
-        List<Item> itensList =  getListaItensDisposniveis(itemIdsParaRemover);
 
         if(carrinhoExistente == null){
-            Carrinho carrinho = criarCarrinho(usuarioId, itensList);
+            validaQuantidadeItensEstoque(itemIds);
+            List<Item> itens = listaItensDTOToListItens(itemIds);
+            Carrinho carrinho = criarCarrinho(usuarioId, itens);
             return criarCarrinhoDTO(carrinhoRepository.save(carrinho));
         }else if (carrinhoExistente != null){
+            validaQuantidadeItensEstoque(itemIds);
+            List<Item> itensList = getListaItensAtualizados(itemIds);
             updateItensExistentes(carrinhoExistente, itensList);
             return criarCarrinhoDTO(carrinhoRepository.save(carrinhoExistente));
         }
@@ -60,14 +55,14 @@ public class CarrinhoService {
         Carrinho carrinho = getCarrinhoByUser(usuarioId);
 
         if(carrinho == null){
-            throw new RuntimeException("Carrinho não encontrado");
+            throw new BusinessException("Carrinho não encontrado");
         }else {
             for (Long itemRemover : itemIdsParaRemover) {
                 Iterator<Item> iterator = carrinho.getListItens().iterator();
                 while (iterator.hasNext()) {
                     Item item = iterator.next();
                     if (item.getItemId().equals(itemRemover)) {
-                        //TODO: Atualiza no serviço de item de acordo com a quantidade, se necessário
+                        atualizaQuantidadeEstoque(item.getItemId(), item.getQuantidadeItem(), true);
                         iterator.remove();
                     }
                 }
@@ -80,11 +75,9 @@ public class CarrinhoService {
         for (Item novoItem : itensList) {
             boolean encontrado = false;
             for (Item item : carrinhoExistente.getListItens()) {
-                if (novoItem.getItemId() == item.getItemId() && novoItem.getQuantidadeItem() != item.getQuantidadeItem()){
-                    item.setQuantidadeItem(novoItem.getQuantidadeItem());
-                    encontrado = true;
-                    break;
-                }else if(novoItem.getItemId() == item.getItemId() && novoItem.getQuantidadeItem() == item.getQuantidadeItem()){
+                if (novoItem.getItemId().equals(item.getItemId())){
+                    int novaQuantidade = item.getQuantidadeItem() + novoItem.getQuantidadeItem();
+                    item.setQuantidadeItem(novaQuantidade);
                     encontrado = true;
                     break;
                 }
@@ -96,52 +89,83 @@ public class CarrinhoService {
     }
 
     private Carrinho getCarrinhoByUser(Long usuarioLogadoId){
-        return carrinhoRepository.findByUsuarioLogadoId(usuarioLogadoId)
-                .orElseThrow(() -> new EntityNotFoundException(Carrinho.class.getSimpleName()));
+        return carrinhoRepository.findByUsuarioLogadoId(usuarioLogadoId);
     }
 
-    private List<Item> getListaItensDisposniveis(List<ItemDTO> listItens){
-        List<Item> itensAvaiableList = new ArrayList<>();
+    private void validaQuantidadeItensEstoque(List<ItemDTO> itemIds){
+        for (ItemDTO itemDTO : itemIds) {
+            ItemEstoqueResponseDTO itemEstoqueAtual = getItemEstoque(itemDTO.getItemId());
+
+            if (itemEstoqueAtual != null && itemEstoqueAtual.getQuantidadeEmEstoque() < itemDTO.getQuantidadeItem()) {
+                throw new BusinessException(String.format("Quantidade informada do itemId %s indisponível em estoque", itemDTO.getItemId()));
+            }
+        }
+    }
+
+    private List<Item> getListaItensAtualizados(List<ItemDTO> listItens){
+        List<Item> itensList =  new ArrayList<>();
         for (ItemDTO itemDTO : listItens) {
-            ResponseEntity<String> response = restTemplate.getForEntity(URL_MSITEMS + "/itens/"+itemDTO.getItemId(), String.class);
-            if(response.getStatusCode() == HttpStatus.BAD_REQUEST ||  response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR){
-              throw new RuntimeException("Erro ao verificar item: " + response.getBody());
-            } else if(response.getStatusCode() == HttpStatus.OK){
-                if(response.getStatusCode() == HttpStatus.OK){
-                    try {
-                        if(response.getBody() != null){
-                            int quantidadeEmEstoque = objectMapper.readValue(response.getBody(), JsonNode.class).get("quantidadeEmEstoque").asInt();
+            try {
+                atualizaQuantidadeEstoque(itemDTO.getItemId(), itemDTO.getQuantidadeItem(), false);
+                itensList.add(Item.builder()
+                        .itemId(itemDTO.getItemId())
+                        .quantidadeItem(itemDTO.getQuantidadeItem())
+                        .build());
+            } catch (HttpClientErrorException.NotFound e) {
+                throw new BusinessException(String.format("Item ID %s não encontrado.", itemDTO.getItemId()));
+            } catch (HttpClientErrorException.BadRequest e) {
+                throw new BusinessException("Erro ao verificar item: " + e.getResponseBodyAsString());
+            } catch (HttpServerErrorException e) {
+                throw new BusinessException("Erro no servidor ao verificar item: " + e.getResponseBodyAsString());
+            }
+        }
 
-                            if(quantidadeEmEstoque >= itemDTO.getQuantidadeItem()){
-                                itensAvaiableList.add(new Item(itemDTO.getItemId(), itemDTO.getQuantidadeItem()));
-                            } else{
-                                throw new BusinessException(String.format("Quantidade informada do itemId %s indisponivel em estoque", itemDTO.getItemId()));
-                            }
-                        }else{
-                            //TODO produto não encontrado exception
-                        }
+        return itensList;
+    }
 
-                    } catch (JsonProcessingException | RuntimeException e) {
-                        throw new RuntimeException("Erro ao tratar produtos do estoque", e);
-                    }
 
-                } else if(response.getStatusCode() == HttpStatus.BAD_REQUEST){
-                    //TODO throw new RegraNegocioException(reponse.getMessage());
-                } else if(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR){
-                    throw new RuntimeException("Erro ao atualizar estoque: " + response.getBody());
+    private ItemEstoqueResponseDTO getItemEstoque(Long itemId){
+        try {
+            ResponseEntity<ItemEstoqueResponseDTO> responseEntity = restTemplate.getForEntity(urlMSItems + "/itens/" + itemId, ItemEstoqueResponseDTO.class);
+            if (responseEntity.getBody() != null) {
+                return responseEntity.getBody();
+            }
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new BusinessException(String.format("Item ID %s não encontrado.", itemId));
+        } catch (HttpClientErrorException.BadRequest e) {
+            throw new BusinessException("Erro ao verificar item: " + e.getResponseBodyAsString());
+        } catch (HttpServerErrorException e) {
+            throw new BusinessException("Erro no servidor ao verificar item: " + e.getResponseBodyAsString());
+        }
+
+        return null;
+    }
+
+    private void atualizaQuantidadeEstoque(Long itemId, int novaQuantidade, boolean isAcrescentar){
+        ItemEstoqueResponseDTO itemEstoqueAtual = getItemEstoque(itemId);
+        try {
+            int quantidadeAtualizada;
+
+            if(itemEstoqueAtual != null){
+                if(isAcrescentar){
+                    quantidadeAtualizada = itemEstoqueAtual.getQuantidadeEmEstoque() + novaQuantidade;
+                }else{
+                    quantidadeAtualizada = itemEstoqueAtual.getQuantidadeEmEstoque() - novaQuantidade;
                 }
+                itemEstoqueAtual.setQuantidadeEmEstoque(quantidadeAtualizada);
             }
 
-        }
-        return itensAvaiableList;
+            new RestTemplate().put(urlMSItems + "/itens/" + itemId, itemEstoqueAtual);
+
+            } catch (HttpClientErrorException.NotFound e) {
+                throw new BusinessException(String.format("Item ID %s não encontrado para update.", itemId));
+            } catch (HttpClientErrorException.BadRequest e) {
+                throw new BusinessException("Erro ao atualizar item: " + e.getResponseBodyAsString());
+            } catch (HttpServerErrorException e) {
+                throw new BusinessException("Erro no servidor ao atualizar item: " + e.getResponseBodyAsString());
+            }
     }
 
-    //TODO:Verificar se necessario remover
-    private String getListIdItensConcat(List<ItemDTO> itensLista){
-        return itensLista.stream()
-                .map(item -> String.valueOf(item.getItemId()))
-                .collect(Collectors.joining(","));
-    }
     private Carrinho criarCarrinho(Long usuarioId, List<Item> itensList) {
         return Carrinho.builder()
                 .usuarioLogadoId(usuarioId)
@@ -162,10 +186,21 @@ public class CarrinhoService {
                         .itemId(item.getItemId())
                         .quantidadeItem(item.getQuantidadeItem())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public CarrinhoDTO buscarCarrinho(Long userId) {
         return criarCarrinhoDTO(getCarrinhoByUser(userId));
+    }
+
+    private List<Item> listaItensDTOToListItens(List<ItemDTO> listItens){
+        List<Item> itensAvaiableList = new ArrayList<>();
+        for (ItemDTO itemDTO : listItens) {
+            itensAvaiableList.add(Item.builder()
+                    .itemId(itemDTO.getItemId())
+                    .quantidadeItem(itemDTO.getQuantidadeItem())
+                    .build());
+        }
+        return itensAvaiableList;
     }
 }
