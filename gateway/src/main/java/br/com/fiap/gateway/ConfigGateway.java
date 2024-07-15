@@ -1,6 +1,7 @@
 package br.com.fiap.gateway;
 
 import br.com.fiap.gateway.routes.MsLoginRoutes;
+import br.com.fiap.gateway.routes.MsPagamentosRoutes;
 import br.com.fiap.gateway.security.AuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -16,6 +17,8 @@ public class ConfigGateway {
 
     private final MsLoginRoutes loginRoutes;
 
+    private final MsPagamentosRoutes pagamentosRoutes;
+
     @Bean
     public RouteLocator custom(RouteLocatorBuilder builder){
 
@@ -23,6 +26,7 @@ public class ConfigGateway {
 
         // Cada serviço terá a própria implementação da configuração de rotas.
         loginRoutes.createRoutes(routerBuilder, authenticationFilter);
+        pagamentosRoutes.createRoutes(routerBuilder, authenticationFilter);
 
         return routerBuilder.build();
     }
