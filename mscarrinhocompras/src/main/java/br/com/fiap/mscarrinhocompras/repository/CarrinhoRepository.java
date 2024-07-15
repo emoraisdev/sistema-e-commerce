@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface CarrinhoRepository extends JpaRepository<Carrinho, String> {
 
-    Optional<Carrinho> findByUsuarioLogadoId(Long usuarioLogadoId);
+    Carrinho findByUsuarioLogadoId(Long usuarioLogadoId);
 }
