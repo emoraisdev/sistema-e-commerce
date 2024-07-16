@@ -1,0 +1,118 @@
+services:
+  db:
+    build:
+      context: ./mysql
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    networks:
+      - netms
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mspagamentos:
+    build:
+      context: ./mspagamentos
+    container_name: mspagamentos
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8085:8085"
+    environment:
+      DB_URL: mysql_db
+      DB_NAME: pagamentos
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      CARRINHO_COMPRA_URL: mscarrinhocompras
+    networks:
+      - netms
+
+  msitens:
+    build:
+      context: ./msitens
+    container_name: msitens
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+    environment:
+      DB_URL: mysql_db
+      DB_NAME: itens
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    networks:
+      - netms
+
+  mscarrinhocompras:
+    build:
+      context: ./mscarrinhocompras
+    container_name: mscarrinhocompras
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8084:8084"
+    environment:
+      DB_URL: mysql_db
+      DB_NAME: carrinhocompras
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      ITEM_URL: msitens
+    networks:
+      - netms
+
+  msprecos:
+    build:
+      context: ./msprecos
+    container_name: msprecos
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8083:8083"
+    environment:
+      DB_URL: mysql_db
+      DB_NAME: precos
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    networks:
+      - netms
+
+  mslogin:
+    build:
+      context: ./mslogin
+    container_name: mslogin
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      DB_URL: mysql_db
+      DB_NAME: login
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      TOKEN_SECRET: e-commerce2024 
+    networks:
+      - netms
+
+  msgateway:
+    build:
+      context: ./gateway
+    container_name: msgateway
+    ports:
+      - "8080:8080"
+    networks:
+      - netms
+    environment: 
+     TOKEN_SECRET: e-commerce2024 
+networks:
+  netms:
+    driver: bridge
