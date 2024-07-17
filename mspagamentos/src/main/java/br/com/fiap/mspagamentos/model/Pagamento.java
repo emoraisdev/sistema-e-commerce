@@ -1,27 +1,23 @@
 package br.com.fiap.mspagamentos.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 
-@Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
 public class Pagamento {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    private Long idCarrinho;
-
-    private double valor;
-
+    private Long id;
+    private Long usuarioId;
+    private Double valor;
     @Enumerated(EnumType.STRING)
-    private PagamentoEnum tipoPagamento;
-
-
+    private PagamentoEnum status;
+    private String metodoPagamento;
+    private LocalDateTime dataPagamento;
 }
