@@ -469,6 +469,99 @@
 				}
 			},
 			"response": []
-		}
-	]
+		},
+		{
+        	"name": "MsPagamentos",
+        	"item": [
+             {
+            "name": "Realizar Pagamento",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"usuarioId\": 1,\n    \"metodoPagamento\": \"CARTAO_CREDITO\",\n    \"valor\": 100.0,\n    \"status\": \"PENDENTE\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:8085/api/pagamento/realizar/1",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8085",
+                    "path": [
+                        "api",
+                        "pagamento",
+                        "realizar",
+                        "1"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Confirmar Pagamento",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://localhost:8085/api/pagamento/confirmar/1?status=APROVADO",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8085",
+                    "path": [
+                        "api",
+                        "pagamento",
+                        "confirmar",
+                        "1"
+                    ],
+                    "query": [
+                        {
+                            "key": "status",
+                            "value": "APROVADO"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+      "name": "Verificar Pagamento",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {},
+        "url": {
+          "raw": "http://localhost:8080/api/pagamento/{pagamentoId}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "pagamento",
+            "{pagamentoId}"
+          ]
+        }
+      },
+      "response": []
+    }
+]
+}
+]
 }
