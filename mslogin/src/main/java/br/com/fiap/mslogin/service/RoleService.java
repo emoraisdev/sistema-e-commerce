@@ -11,4 +11,6 @@ public interface RoleService {
     Role findByName(String roleName);
 
     Page<Role> listar(PageRequest pageRequest);
+
+    Role atualizar(Role role);
 }

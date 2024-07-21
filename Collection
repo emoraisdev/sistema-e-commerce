@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "d7eef59e-90cd-469b-8fcb-d98491001af9",
+		"_postman_id": "e751dc13-1453-4cb4-b1f7-9e05d2864094",
 		"name": "E-Commerce",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "843251"
+		"_exporter_id": "23155843"
 	},
 	"item": [
 		{
@@ -44,12 +44,28 @@
 						},
 						{
 							"name": "Logar",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let responseBody = pm.response.json();\r",
+											"\r",
+											"if (responseBody != null && responseBody.token != null) {\r",
+											"    pm.collectionVariables.set(\"token\", responseBody.token);\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"email6@12312312311.com\",\r\n    \"senha\": \"123123\"\r\n}",
+									"raw": "{\r\n    \"email\": \"email2@12312312311.com\",\r\n    \"senha\": \"123123\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -84,7 +100,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsNkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA1NzIzNDh9.Nd8ueEXZBisphaL1XLCtjgzJCUcg_sQsy2wpvtOlOmI",
+											"value": "{{token}}",
 											"type": "string"
 										}
 									]
@@ -117,14 +133,66 @@
 							"response": []
 						},
 						{
-							"name": "Atribuir Role",
+							"name": "Atualizar",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsNkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA1NzIzNDh9.Nd8ueEXZBisphaL1XLCtjgzJCUcg_sQsy2wpvtOlOmI",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"2\",\r\n    \"nome\": \"Maria\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/usuarios/api/usuarios",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"usuarios",
+										"api",
+										"usuarios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Atribuir Role Usuário",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
 											"type": "string"
 										}
 									]
@@ -133,7 +201,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"email5@12312312311.com\",\r\n    \"role\": \"ADMIN\"\r\n}",
+									"raw": "{\r\n    \"email\": \"email2@12312312311.com\",\r\n    \"role\": \"USER\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -156,6 +224,47 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Remover Role Usuário",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"email5@12312312311.com\",\r\n    \"role\": \"ADMIN\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/usuarios/api/usuarios/remover-role",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"usuarios",
+										"api",
+										"usuarios",
+										"remover-role"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -170,7 +279,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsMkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA0OTQzOTB9.j7c4rSlofujxy4v1P28Q_zxI-K_6XLJwy5HyY3PEmTM",
+											"value": "{{token}}",
 											"type": "string"
 										}
 									]
@@ -213,7 +322,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImVtYWlsMkAxMjMxMjMxMjMxMS5jb20iLCJleHAiOjE3MjA0OTUzODB9.A8rYvbnpwdcuS65Xmfd4VIZZQR1JJJSbYkdIqB4QIVk",
+											"value": "{{token}}",
 											"type": "string"
 										}
 									]
@@ -244,99 +353,25 @@
 								}
 							},
 							"response": []
-						}
-					]
-				},
-				{
-					"name": "MsCarrinhoCompras",
-					"item": [
-						{
-							"name": "Listar",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "usuarioId",
-										"value": "1",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8084/api/carrinho",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8084",
-									"path": [
-										"api",
-										"carrinho"
-									]
-								}
-							},
-							"response": []
 						},
 						{
-							"name": "Adicionar Item",
+							"name": "Atualizar",
 							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "usuarioId",
-										"value": "1",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "[\n  {\n    \"itemId\":1,\n    \"quantidadeItem\": 2\n  }\n]",
-									"options": {
-										"raw": {
-											"language": "json"
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
 										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8084/api/carrinho",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8084",
-									"path": [
-										"api",
-										"carrinho"
 									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Deletar Item",
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "usuarioId",
-										"value": "1",
-										"type": "text"
-									}
-								],
+								},
+								"method": "PUT",
+								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "[\n  1\n]",
+									"raw": "{\r\n    \"id\": 4,\r\n    \"name\": \"Gestor\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -344,15 +379,16 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8084/api/carrinho",
+									"raw": "http://localhost:8080/usuarios/api/roles",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
-									"port": "8084",
+									"port": "8080",
 									"path": [
+										"usuarios",
 										"api",
-										"carrinho"
+										"roles"
 									]
 								}
 							},
@@ -439,6 +475,211 @@
 			]
 		},
 		{
+			"name": "MsPagamentos",
+			"item": [
+				{
+					"name": "Realizar Pagamento",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuarioId\": 1,\n    \"metodoPagamento\": \"CARTAO_CREDITO\",\n    \"valor\": 100.0,\n    \"status\": \"PENDENTE\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/pagamento/realizar/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"pagamento",
+								"realizar",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirmar Pagamento",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8085/api/pagamento/confirmar/1?status=APROVADO",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"pagamento",
+								"confirmar",
+								"1"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "APROVADO"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar Pagamento",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/pagamento/{pagamentoId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pagamento",
+								"{pagamentoId}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MsCarrinhoCompras",
+			"item": [
+				{
+					"name": "Listar",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "usuarioId",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/carrinho",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"carrinho"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adicionar Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "usuarioId",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"itemId\":1,\n    \"quantidadeItem\": 2\n  }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/carrinho",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"carrinho"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Item",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "usuarioId",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  1\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/carrinho",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"carrinho"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "New Request",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -469,99 +710,12 @@
 				}
 			},
 			"response": []
-		},
+		}
+	],
+	"variable": [
 		{
-        	"name": "MsPagamentos",
-        	"item": [
-             {
-            "name": "Realizar Pagamento",
-            "request": {
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json",
-                        "type": "text"
-                    }
-                ],
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\n    \"usuarioId\": 1,\n    \"metodoPagamento\": \"CARTAO_CREDITO\",\n    \"valor\": 100.0,\n    \"status\": \"PENDENTE\"\n}"
-                },
-                "url": {
-                    "raw": "http://localhost:8085/api/pagamento/realizar/1",
-                    "protocol": "http",
-                    "host": [
-                        "localhost"
-                    ],
-                    "port": "8085",
-                    "path": [
-                        "api",
-                        "pagamento",
-                        "realizar",
-                        "1"
-                    ]
-                }
-            },
-            "response": []
-        },
-        {
-            "name": "Confirmar Pagamento",
-            "request": {
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json",
-                        "type": "text"
-                    }
-                ],
-                "url": {
-                    "raw": "http://localhost:8085/api/pagamento/confirmar/1?status=APROVADO",
-                    "protocol": "http",
-                    "host": [
-                        "localhost"
-                    ],
-                    "port": "8085",
-                    "path": [
-                        "api",
-                        "pagamento",
-                        "confirmar",
-                        "1"
-                    ],
-                    "query": [
-                        {
-                            "key": "status",
-                            "value": "APROVADO"
-                        }
-                    ]
-                }
-            },
-            "response": []
-        },
-        {
-      "name": "Verificar Pagamento",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "body": {},
-        "url": {
-          "raw": "http://localhost:8080/api/pagamento/{pagamentoId}",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "pagamento",
-            "{pagamentoId}"
-          ]
-        }
-      },
-      "response": []
-    }
-]
-}
-]
+			"key": "token",
+			"value": ""
+		}
+	]
 }

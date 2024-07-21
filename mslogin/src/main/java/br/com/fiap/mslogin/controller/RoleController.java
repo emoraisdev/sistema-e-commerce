@@ -36,4 +36,14 @@ public class RoleController {
         var roles = service.listar(PageRequest.of(page, size));
         return new ResponseEntity<>(roles, HttpStatus.OK);
     }
+
+    @PutMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Role> atualizar(@Valid @RequestBody Role role) {
+
+        var roleAtualizada = service.atualizar(role);
+
+        return new ResponseEntity<>(roleAtualizada, HttpStatus.CREATED);
+    }
 }

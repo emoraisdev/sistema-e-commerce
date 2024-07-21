@@ -94,6 +94,38 @@ public class UsuarioServiceImpl implements UsuarioService{
         return toUsuarioResponseDTO(repo.save(usuario));
     }
 
+    @Override
+    public UsuarioResponseDTO removerRole(UsuarioRoleDTO usuarioResponseDTO) {
+
+        var usuario = repo.getUsuarioByEmail(usuarioResponseDTO.email())
+                .orElseThrow(() -> new BusinessException("Usuário Não encontrado!"));
+
+        var role = roleService.findByName(usuarioResponseDTO.role());
+
+        if (!usuario.getRoles().stream().anyMatch( r -> r.getId().equals(role.getId()))) {
+            throw new BusinessException("Usuário não possui a Role especificada.");
+        }
+
+        usuario.getRoles().remove(role);
+
+        return toUsuarioResponseDTO(repo.save(usuario));
+    }
+
+    @Override
+    public UsuarioResponseDTO atualizar(Long usuarioId, UsuarioUpdateDTO dto) {
+
+        if (usuarioId == null || !usuarioId.equals(dto.id())) {
+            throw new BusinessException("O Usuário que realiza a operação deve ser o mesmo que o usuário alterado.");
+        }
+
+        var usuarioBD = repo.findById(dto.id())
+                .orElseThrow(() -> new EntityNotFoundException(Usuario.class.getSimpleName()));
+
+        usuarioBD.setNome(dto.nome());
+
+        return toUsuarioResponseDTO(repo.save(usuarioBD));
+    }
+
     private Usuario toEntity(UsuarioDTO dto){
         return Usuario.builder()
                 .nome(dto.nome())

@@ -35,4 +35,19 @@ public class RoleServiceImpl implements RoleService{
     public Page<Role> listar(PageRequest pageRequest) {
         return repo.findAll(pageRequest);
     }
+
+    @Override
+    public Role atualizar(Role role) {
+
+        if (role.getId() == null) {
+            throw new BusinessException("O Id deve ser informado.");
+        }
+
+        var roleBD = repo.findById(role.getId())
+                .orElseThrow(() -> new EntityNotFoundException(Role.class.getSimpleName()));
+
+        roleBD.setName(role.getName());
+
+        return repo.save(roleBD);
+    }
 }

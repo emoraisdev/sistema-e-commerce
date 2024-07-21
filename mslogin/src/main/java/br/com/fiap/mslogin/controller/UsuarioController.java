@@ -28,7 +28,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/logar")
-    public ResponseEntity<TokenDTO> incluir(@Valid @RequestBody LoginDTO dto){
+    public ResponseEntity<TokenDTO> logar(@Valid @RequestBody LoginDTO dto){
 
         var token = service.logar(dto);
 
@@ -61,5 +61,23 @@ public class UsuarioController {
         var user = service.atribuirRole(usuarioRoleDTO);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/remover-role")
+    public ResponseEntity<UsuarioResponseDTO> removerRole(@Valid @RequestBody UsuarioRoleDTO usuarioRoleDTO){
+
+
+        var user = service.removerRole(usuarioRoleDTO);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<UsuarioResponseDTO> atualizar(@Valid @RequestBody UsuarioUpdateDTO dto,
+                                                        @RequestHeader(value = "usuarioId") Long usuarioId){
+
+        var usuarioAtualizado = service.atualizar(usuarioId, dto);
+
+        return new ResponseEntity<>(usuarioAtualizado, HttpStatus.OK);
     }
 }

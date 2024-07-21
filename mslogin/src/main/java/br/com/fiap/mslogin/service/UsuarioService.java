@@ -1,7 +1,6 @@
 package br.com.fiap.mslogin.service;
 
 import br.com.fiap.mslogin.controller.dto.*;
-import br.com.fiap.mslogin.model.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -16,4 +15,8 @@ public interface UsuarioService {
     Page<UsuarioResponseDTO> listar(PageRequest pageRequest);
 
     UsuarioResponseDTO atribuirRole(UsuarioRoleDTO usuarioResponseDTO);
+
+    UsuarioResponseDTO removerRole(UsuarioRoleDTO usuarioResponseDTO);
+
+    UsuarioResponseDTO atualizar(Long usuarioId, UsuarioUpdateDTO dto);
 }
