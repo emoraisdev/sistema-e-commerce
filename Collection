@@ -65,7 +65,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"email2@12312312311.com\",\r\n    \"senha\": \"123123\"\r\n}",
+									"raw": "{\r\n    \"email\": \"admin123456@admin123456.com\",\r\n    \"senha\": \"admin123\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
