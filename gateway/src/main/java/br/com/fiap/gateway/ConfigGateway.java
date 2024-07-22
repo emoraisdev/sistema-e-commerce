@@ -1,5 +1,7 @@
 package br.com.fiap.gateway;
 
+import br.com.fiap.gateway.routes.MsCarrinhoComprasRoutes;
+import br.com.fiap.gateway.routes.MsItemRoutes;
 import br.com.fiap.gateway.routes.MsLoginRoutes;
 import br.com.fiap.gateway.routes.MsPagamentosRoutes;
 import br.com.fiap.gateway.security.AuthenticationFilter;
@@ -19,6 +21,10 @@ public class ConfigGateway {
 
     private final MsPagamentosRoutes pagamentosRoutes;
 
+    private final MsItemRoutes itemRoutes;
+
+    private MsCarrinhoComprasRoutes carrinhoComprasRoutes;
+
     @Bean
     public RouteLocator custom(RouteLocatorBuilder builder){
 
@@ -27,6 +33,8 @@ public class ConfigGateway {
         // Cada serviço terá a própria implementação da configuração de rotas.
         loginRoutes.createRoutes(routerBuilder, authenticationFilter);
         pagamentosRoutes.createRoutes(routerBuilder, authenticationFilter);
+        itemRoutes.createRoutes(routerBuilder, authenticationFilter);
+        carrinhoComprasRoutes.createRoutes(routerBuilder, authenticationFilter);
 
         return routerBuilder.build();
     }
