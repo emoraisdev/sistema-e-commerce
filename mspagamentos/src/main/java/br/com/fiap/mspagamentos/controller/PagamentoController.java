@@ -8,7 +8,6 @@ import br.com.fiap.mspagamentos.service.PagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,9 +18,11 @@ public class PagamentoController {
     private PagamentoService pagamentoService;
 
     @PostMapping("/realizar/{idCarrinho}")
-    public ResponseEntity<ResumoPagamentoDTO> realizarPagamento(@RequestBody PagamentoDTO pagamentoDTO, @PathVariable Long idCarrinho) {
+    public ResponseEntity<ResumoPagamentoDTO> realizarPagamento(@RequestBody PagamentoDTO pagamentoDTO,
+                                                                @PathVariable Long idCarrinho,
+                                                                @RequestHeader(value = "usuarioId") Long usuarioId) {
         Pagamento pagamento = new Pagamento();
-        pagamento.setUsuarioId(pagamentoDTO.getUsuarioId());
+        pagamento.setUsuarioId(usuarioId);
         pagamento.setMetodoPagamento(pagamentoDTO.getMetodoPagamento());
 
         ResumoPagamentoDTO resumoPagamentoDTO = pagamentoService.realizarPagamento(pagamento, idCarrinho);

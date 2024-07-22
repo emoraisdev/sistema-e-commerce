@@ -68,23 +68,6 @@ services:
     networks:
       - netms
 
-  msprecos:
-    build:
-      context: ./msprecos
-    container_name: msprecos
-    depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - "8083:8083"
-    environment:
-      DB_URL: mysql_db
-      DB_NAME: precos
-      DB_USERNAME: root
-      DB_PASSWORD: root
-    networks:
-      - netms
-
   mslogin:
     build:
       context: ./mslogin
