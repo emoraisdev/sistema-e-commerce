@@ -30,6 +30,7 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: root
       CARRINHO_COMPRA_URL: mscarrinhocompras
+      ITEM_URL: msitens
     networks:
       - netms
 

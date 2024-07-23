@@ -9,8 +9,8 @@ import java.util.List;
 
 @Data
 public class CarrinhoDTO {
-    private Long id;
-    private Long usuarioId;
-    private List<ItemCarrinhoDTO> itens;
+    private Long carrinhoId;
+    private Long usuarioLogadoId;
+    private List<ItemDTO> itensLista;
     private BigDecimal totalPedido;
 }

@@ -21,7 +21,8 @@ public class MsCarrinhoComprasRoutes {
     }
 
     private Buildable<Route> configureCarrinhoComprasRoute(PredicateSpec r, AuthenticationFilter authenticationFilter) {
-        return r.path("/api/carrinho/**")
+        return r.path("/carrinho/api/carrinho/**")
+                .and().method(HttpMethod.values())
                 .filters(f -> f.stripPrefix(1)
                         .filter(authenticationFilter.apply(new CustomFilterConfig(Roles.ROLE_USER))))
                 .uri(msCarrinho);

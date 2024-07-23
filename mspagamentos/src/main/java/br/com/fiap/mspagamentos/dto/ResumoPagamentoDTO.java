@@ -11,6 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ResumoPagamentoDTO {
     private Pagamento pagamento;
-    private List<ItemCarrinhoDTO> itens;
+    private List<ItemDTO> itens;
     private BigDecimal totalPedido;
 }

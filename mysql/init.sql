@@ -43,3 +43,7 @@ INSERT INTO usuario (email,nome,senha) VALUES
 INSERT INTO usuario_role (usuario_id,role_id) VALUES
     ((select max(id) from usuario where email = 'admin123456@admin123456.com'),
      (select max(id) from role where name = 'ADMIN'));
+
+INSERT INTO usuario_role (usuario_id,role_id) VALUES
+    ((select max(id) from usuario where email = 'admin123456@admin123456.com'),
+     (select max(id) from role where name = 'USER'));

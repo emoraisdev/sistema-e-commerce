@@ -175,6 +175,7 @@ public class CarrinhoService {
 
     private CarrinhoDTO criarCarrinhoDTO(Carrinho carrinho) {
         return CarrinhoDTO.builder()
+                .carrinhoId(carrinho.getId())
                 .usuarioLogadoId(carrinho.getUsuarioLogadoId())
                 .itensLista(getListItensDTO(carrinho.getListItens()))
                 .build();

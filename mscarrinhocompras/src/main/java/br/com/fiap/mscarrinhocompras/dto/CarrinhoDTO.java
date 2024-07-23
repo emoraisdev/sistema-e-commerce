@@ -20,6 +20,8 @@ public class CarrinhoDTO {
     @NotNull(message = "Id do Usuario não informado")
     private Long usuarioLogadoId;
 
+    private Long carrinhoId;
+
     @Valid
     @NotNull(message = "Itens do carrinho não informado")
     @Size(min = 1, message = "Necessário ter ao menos 1 item incluido")

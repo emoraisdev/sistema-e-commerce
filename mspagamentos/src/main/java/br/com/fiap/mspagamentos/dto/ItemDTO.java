@@ -5,9 +5,9 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class ItemCarrinhoDTO {
-    private Long id;
+public class ItemDTO {
+    private Long itemId;
     private String nome;
     private BigDecimal preco;
-    private int quantidade;
+    private int quantidadeItem;
 }
