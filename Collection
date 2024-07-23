@@ -201,7 +201,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"email2@12312312311.com\",\r\n    \"role\": \"USER\"\r\n}",
+									"raw": "{\r\n    \"email\": \"admin123456@admin123456.com\",\r\n    \"role\": \"USER\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -371,7 +371,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": 4,\r\n    \"name\": \"Gestor\"\r\n}",
+									"raw": "{\r\n    \"id\": 7,\r\n    \"name\": \"Gestor\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -399,157 +399,34 @@
 			]
 		},
 		{
-			"name": "MsPrecos",
+			"name": "MsItens",
 			"item": [
 				{
-					"name": "Precos",
-					"item": [
-						{
-							"name": "Cadastrar",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"preco\": \"100.32\",\r\n    \"itemId\": 1\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8083/api/precos",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8083",
-									"path": [
-										"api",
-										"precos"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Buscar por Item Id",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8083/api/precos/by-item-id/1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8083",
-									"path": [
-										"api",
-										"precos",
-										"by-item-id",
-										"1"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "MsPagamentos",
-			"item": [
-				{
-					"name": "Realizar Pagamento",
+					"name": "Cadastrar",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"usuarioId\": 1,\n    \"metodoPagamento\": \"CARTAO_CREDITO\",\n    \"valor\": 100.0,\n    \"status\": \"PENDENTE\"\n}"
+							"raw": "{\r\n  \"nome\": \"Camiseta\",\r\n  \"descricao\": \"Camiseta de algodão com estampa personalizada\",\r\n  \"preco\": 29.90,\r\n  \"quantidadeEmEstoque\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
-							"raw": "http://localhost:8085/api/pagamento/realizar/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8085",
-							"path": [
-								"api",
-								"pagamento",
-								"realizar",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Confirmar Pagamento",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8085/api/pagamento/confirmar/1?status=APROVADO",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8085",
-							"path": [
-								"api",
-								"pagamento",
-								"confirmar",
-								"1"
-							],
-							"query": [
-								{
-									"key": "status",
-									"value": "APROVADO"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Verificar Pagamento",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/pagamento/{pagamentoId}",
+							"raw": "http://localhost:8080/api/itens",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -557,8 +434,172 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"pagamento",
-								"{pagamentoId}"
+								"itens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/itens",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"itens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Por Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/itens/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"itens",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Shorts 2\",\r\n  \"descricao\": \"Shorts 3333\",\r\n  \"preco\": 129.90,\r\n  \"quantidadeEmEstoque\": 1000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/itens/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"itens",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/itens/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"itens",
+								"1"
 							]
 						}
 					},
@@ -575,12 +616,23 @@
 						"disableBodyPruning": true
 					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
-								"key": "usuarioId",
-								"value": "1",
-								"type": "text"
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -593,13 +645,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8084/api/carrinho",
+							"raw": "http://localhost:8080/carrinho/api/carrinho",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8084",
+							"port": "8080",
 							"path": [
+								"carrinho",
 								"api",
 								"carrinho"
 							]
@@ -610,12 +663,23 @@
 				{
 					"name": "Adicionar Item",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
-								"key": "usuarioId",
-								"value": "1",
-								"type": "text"
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -628,13 +692,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8084/api/carrinho",
+							"raw": "http://localhost:8080/carrinho/api/carrinho",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8084",
+							"port": "8080",
 							"path": [
+								"carrinho",
 								"api",
 								"carrinho"
 							]
@@ -645,14 +710,18 @@
 				{
 					"name": "Deletar Item",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "usuarioId",
-								"value": "1",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "[\n  1\n]",
@@ -663,13 +732,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8084/api/carrinho",
+							"raw": "http://localhost:8080/carrinho/api/carrinho",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8084",
+							"port": "8080",
 							"path": [
+								"carrinho",
 								"api",
 								"carrinho"
 							]
@@ -680,36 +750,97 @@
 			]
 		},
 		{
-			"name": "New Request",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"id\": 1,\n    \"nome\": \"Caneta X\",\n    \"descricao\": \"Caneta esferografica\",\n    \"preco\": 1.50,\n    \"quantidadeEmEstoque\": 10\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "MsPagamentos",
+			"item": [
+				{
+					"name": "Realizar Pagamento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"metodoPagamento\": \"CARTAO_CREDITO\",\n    \"valor\": 100.0,\n    \"status\": \"PENDENTE\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/pagamento/api/pagamento/realizar/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pagamento",
+								"api",
+								"pagamento",
+								"realizar",
+								"1"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:8082/itens/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8082",
-					"path": [
-						"itens",
-						"1"
-					]
+				{
+					"name": "Confirmar Pagamento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/pagamento/api/pagamento/confirmar/1?status=APROVADO",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pagamento",
+								"api",
+								"pagamento",
+								"confirmar",
+								"1"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "APROVADO"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	],
 	"variable": [
